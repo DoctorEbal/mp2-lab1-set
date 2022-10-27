@@ -13,12 +13,12 @@ static TBitField FAKE_BITFIELD(1);
 
 TBitField::TBitField(int len)
 {
-    if (len <= 0) throw "неправильные данные";
-    BitLen = len;
-    MemLen = (BitLen / (sizeof(TELEM) * 8)) + 1;
-    pMem = new TELEM[MemLen];
-    for (int i = 0; i < MemLen; i++)
-        pMem[i] = 0;
+   if (len <= 0) throw "неправильные данные";
+	BitLen = len;
+	MemLen = (BitLen / (sizeof(TELEM) * 8)) + 1;
+	pMem = new TELEM[MemLen];
+	for (int i = 0; i < MemLen; i++)
+		pMem[i] = 0;
 }
 
 TBitField::TBitField(const TBitField &bf) // конструктор копирования
@@ -40,21 +40,15 @@ TBitField::~TBitField()
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
     if ((n < 0) || (n >= BitLen))
-    {
-        throw "Неправильные данные";
-    }
-
-    return int(n/sizeof(TELEM)*8);
+        throw "неправильные данные";
+    return int(n / (sizeof(TELEM) * 8));
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
     if ((n < 0) || (n >= BitLen))
-    {
-        throw "Неправильные данные";
-    }
-
-    return 1 << (n%(8*sizeof(TELEM)-1));
+        throw "неправильные данные";
+    return 1 << n;
 }
 
 // доступ к битам битового поля
@@ -66,25 +60,20 @@ int TBitField::GetLength(void) const // получить длину (к-во б�
 
 void TBitField::SetBit(const int n) // установить бит
 {
-    if ((n < 0) || (n >= BitLen))
-    {
-        throw "Неправильные данные";
-    }
+    if (n < 0 || n >= BitLen) throw "неправильные данные";
     pMem[GetMemIndex(n)] = pMem[GetMemIndex(n)] | GetMemMask(n);
 }
 
 void TBitField::ClrBit(const int n) // очистить бит
 {
-    if ((n < 0) || (n >= BitLen))
-    {
-        throw "Неправильные данные";
-    }
+
+    if (n < 0 || n >= BitLen) throw "неправильные данные";
     pMem[GetMemIndex(n)] = pMem[GetMemIndex(n)] & (~GetMemMask(n));
 }
 
 int TBitField::GetBit(const int n) const // получить значение бита
 {
-    if (n < 0 || n >= BitLen) throw "incorrect data";
+    if (n < 0 || n >= BitLen) throw "неправильные данные";
     return (pMem[GetMemIndex(n)] & GetMemMask(n));
 }
 
